@@ -28,6 +28,7 @@
 
 :root{
   --ops:#186C71;--youth:#3AAF5E;--media:#55B1C0;--kids:#53C9A8;
+  --h-national:#186C71; --h-break:#3AAF5E; --h-eid:#D98E1F; --h-summer:#3D9FB0;
   --teal:#186C71; --teal-deep:#074B4B; --night:#062F31; --green:#5FBA7E; --lime:#72C34F;
   --text:#20332E; --muted:#5F6B6C; --bg:#F3F7F5; --surface:#FFFFFF; --surface-2:#F7FAF9; --border:#E1EAE8;
   --accent:#186C71; --accent-ink:#FFFFFF; --accent-hover:#074B4B;
@@ -39,6 +40,7 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
+    --h-national:#75C8CC; --h-break:#8FD6A6; --h-eid:#F0C27A; --h-summer:#8FD3DE;
     --ops:#75C8CC;--youth:#8FD6A6;--media:#8FD3DE;--kids:#8FE3CB;
     --text:#E6F1F0; --muted:#9FB9B6; --bg:#041F21; --surface:#0A3436; --surface-2:#0D3D3F; --border:#18504F;
     --accent:#5FBA7E; --accent-ink:#041F21; --accent-hover:#7FC898;
@@ -49,7 +51,8 @@
   }
 }
 :root[data-theme="dark"]{
-  --ops:#75C8CC;--youth:#8FD6A6;--media:#8FD3DE;--kids:#8FE3CB;
+  --h-national:#75C8CC; --h-break:#8FD6A6; --h-eid:#F0C27A; --h-summer:#8FD3DE;
+    --ops:#75C8CC;--youth:#8FD6A6;--media:#8FD3DE;--kids:#8FE3CB;
   --text:#E6F1F0; --muted:#9FB9B6; --bg:#041F21; --surface:#0A3436; --surface-2:#0D3D3F; --border:#18504F;
   --accent:#5FBA7E; --accent-ink:#041F21; --accent-hover:#7FC898;
   --ok:#8FD6A6; --ok-bg:#12493A; --dev:#F0C27A; --dev-bg:#4A3A17; --warn:#F2A196; --warn-bg:#4F2420;
@@ -405,6 +408,97 @@ body::before{ /* يطلي شريط الحافّة العليا في الجوال
 .chest svg .lock{fill:#FFF6E0}
 .chest small,.gate small{white-space:nowrap}
 
+/* ═══ التقويم الدراسي ═══════════════════════════════════ */
+.cal-sec{margin-top:90px;scroll-margin-top:90px}
+.cal-top{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.5fr);gap:18px;margin-bottom:18px}
+.now-card,.year-card,.month,.hol{background:var(--surface);border:1px solid var(--border);border-radius:22px;box-shadow:var(--shadow)}
+.now-card{padding:22px 24px;position:relative;overflow:hidden}
+.now-card::before{content:"";position:absolute;inset-inline:0;top:0;height:4px;background:linear-gradient(270deg,#72C34F,#186C70)}
+.now-label{font-size:13px;color:var(--muted)}
+.now-state{margin:2px 0 14px;font-size:26px;font-weight:700;line-height:1.35}
+.now-state small{display:block;font-size:14px;font-weight:400;color:var(--muted)}
+.now-next{display:grid;gap:10px}
+.nx{display:grid;grid-template-columns:1fr auto;gap:0 10px;padding:10px 14px;border-radius:14px;
+  background:color-mix(in srgb,var(--hc) 10%,var(--surface));border-inline-start:4px solid var(--hc)}
+.nx span{grid-column:1/-1;font-size:12px;color:var(--muted)}
+.nx b{font-size:17px}
+.nx em{font-style:normal;font-weight:700;color:var(--hc);font-size:15px;align-self:center}
+.nx small{grid-column:1/-1;font-size:13px;color:var(--muted)}
+.year-card{padding:20px 22px 14px;display:flex;flex-direction:column;justify-content:center}
+.year-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:3px;background:var(--hc)}
+.year-bar{position:relative;height:46px;border-radius:12px;background:var(--surface-2);border:1px solid var(--border);overflow:hidden}
+.seg{position:absolute;top:0;bottom:0;background:var(--hc);opacity:.9}
+.today-mark{position:absolute;top:-2px;bottom:-2px;width:3px;margin-inline-start:-1px;background:var(--text);border-radius:3px;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--surface) 80%,transparent)}
+.ticks{position:relative;height:22px;margin-top:6px}
+.tick{position:absolute;font-size:11px;color:var(--muted);transform:translateX(50%);white-space:nowrap}
+.tick:first-child{transform:none}
+
+.month{padding:18px 20px 16px;margin-bottom:18px}
+.month-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.month-title{text-align:center;line-height:1.35}
+.month-title b{display:block;font-size:22px}
+.month-title small{color:var(--muted);font-size:13px}
+.mbtn{appearance:none;width:42px;height:42px;border-radius:12px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);
+  display:grid;place-items:center;cursor:pointer;transition:background .2s}
+.mbtn:hover:not(:disabled){background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.mbtn:disabled{opacity:.35;cursor:default}
+.mbtn .flip{transform:scaleX(-1)}
+.wd,.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.wd span{text-align:center;font-size:12.5px;color:var(--muted);padding:6px 0}
+.wd .we{color:color-mix(in srgb,var(--muted) 70%,transparent)}
+.days{row-gap:6px}
+.day{position:relative;min-height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  font-variant-numeric:tabular-nums}
+.day b{font-size:17px;line-height:1.2}
+.day small{font-size:11px;color:var(--muted)}
+.day.we b{color:var(--muted);font-weight:400}
+/* الإجازة شريطٌ متّصل عبر أيامها، يُستدار طرفاه وعند حدود الأسبوع */
+.day.h{background:color-mix(in srgb,var(--hc) 22%,var(--surface))}
+.day.h b{color:var(--text);font-weight:700}
+.day.hs{border-start-start-radius:14px;border-end-start-radius:14px}
+.day.he{border-start-end-radius:14px;border-end-end-radius:14px}
+.day.today::after{content:"";position:absolute;inset:4px;border-radius:12px;border:2px solid var(--text)}
+.day.ev{box-shadow:inset 0 -3px 0 var(--accent)}
+.evd{position:absolute;bottom:-2px;inset-inline:2px;font-style:normal;font-size:9.5px;text-align:center;color:var(--accent);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transform:translateY(100%)}
+.days{padding-bottom:10px}
+.month-note{margin:10px 0 0;font-size:14px;color:var(--muted);text-align:center}
+
+.hol-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.hol{position:relative;overflow:hidden;padding:18px 20px 16px;display:flex;flex-direction:column}
+.hol::before{content:"";position:absolute;inset-inline:0;top:0;height:4px;background:var(--hc)}
+.hol-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.hol-type{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
+.hol-type i{width:9px;height:9px;border-radius:3px;background:var(--hc)}
+.hol-state{font-size:12.5px;font-weight:700;color:var(--hc)}
+.hol h3{margin:0;font-size:20px}
+.hol-when{margin:4px 0 0;font-size:14.5px}
+.hol-hijri{margin:0 0 12px;font-size:13px;color:var(--muted)}
+.hol-foot{margin-top:auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.hol-foot b{font-size:15px;margin-inline-end:4px}
+.tag{font-size:12px;border-radius:999px;padding:1px 10px}
+.tag.trip{background:var(--ok-bg);color:var(--ok)}
+.tag.approx{background:var(--dev-bg);color:var(--dev)}
+.hol.past{opacity:.55}
+.hol.now{outline:2px solid var(--hc);outline-offset:-2px}
+.cal-src{margin:16px 0 0;font-size:13.5px;color:var(--muted);max-width:90ch}
+.cal-src a{color:var(--accent)}
+@media (max-width:860px){
+  .cal-top{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .day{min-height:52px}
+  .day b{font-size:15px}
+  .day small{font-size:9.5px}
+  .evd{display:none}
+  .month{padding:14px 10px 12px}
+  .tick:nth-child(even){display:none}
+}
+
 /* ═══ الختام ══════════════════════════════════════════════ */
 .closing{margin:90px 0 0;position:relative;overflow:hidden;border-radius:30px;padding:56px 40px;color:#fff;text-align:center;
   background:radial-gradient(600px 300px at 0% 100%,rgb(114 195 79 / .55),transparent 70%),linear-gradient(135deg,#186C71,#074B4B)}
@@ -500,6 +594,7 @@ footer::before{content:"";position:absolute;inset-inline:0;top:0;height:4px;back
         <div class="cta">
           <a class="primary" href="#platforms">استكشف المنصات <svg class="ic-sm" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m6 13 6 6 6-6"/></svg></a>
           <a class="ghost" href="#platforms" data-jump="live"><i></i>8 منشورة الآن</a>
+          <a class="ghost" href="#calendar"><svg class="ic-sm" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8 14h2M14 14h2M8 17.5h2"/></svg> إجازات المدارس</a>
         </div>
       </div>
       <div class="orbit" aria-label="خريطة المنصات حول الجمعية">
@@ -843,6 +938,182 @@ footer::before{content:"";position:absolute;inset-inline:0;top:0;height:4px;back
     </article>
   </div>
   <p class="empty" id="empty">لا منصة تطابق بحثك. جرّب كلمة أقصر، أو اختر «الكل».</p>
+
+  
+  <section class="cal-sec" id="calendar" aria-labelledby="cal-title">
+    <div class="section-head">
+      <h2 id="cal-title"><span class="kicker">التقويم الدراسي 1448 هـ · 2026 – 2027</span>متى يكون الطلاب في إجازة؟
+        <small>لتخطيط البرامج والرحلات: ما يقع في أيام الدراسة، وما يقع في الإجازات.</small></h2>
+    </div>
+
+    <div class="cal-top">
+      <div class="now-card" id="cal-now">
+        <span class="now-label">اليوم</span>
+        <p class="now-state" id="cal-state">جاري الحساب…</p>
+        <div class="now-next" id="cal-next"></div>
+      </div>
+      <div class="year-card">
+        <div class="year-head"><b>العام الدراسي كاملًا</b><span class="legend"><span style="--hc:var(--h-national)"><i></i>مناسبة وطنية</span><span style="--hc:var(--h-break)"><i></i>إجازة فصلية</span><span style="--hc:var(--h-eid)"><i></i>عيد</span><span style="--hc:var(--h-summer)"><i></i>نهاية العام</span></span></div>
+        <div class="year-bar" aria-hidden="true"><span class="seg" style="--hc:var(--h-national);inset-inline-start:8.516%;width:1.099%" title="إجازة اليوم الوطني"></span><span class="seg" style="--hc:var(--h-break);inset-inline-start:24.451%;width:2.473%" title="إجازة الخريف"></span><span class="seg" style="--hc:var(--h-break);inset-inline-start:37.912%;width:2.473%" title="إجازة منتصف العام"></span><span class="seg" style="--hc:var(--h-national);inset-inline-start:49.451%;width:1.099%" title="إجازة يوم التأسيس"></span><span class="seg" style="--hc:var(--h-eid);inset-inline-start:51.374%;width:4.396%" title="إجازة عيد الفطر"></span><span class="seg" style="--hc:var(--h-eid);inset-inline-start:70.604%;width:4.396%" title="إجازة عيد الأضحى"></span><span class="seg" style="--hc:var(--h-summer);inset-inline-start:84.066%;width:15.934%" title="إجازة نهاية العام"></span><span class="today-mark" id="cal-today"></span></div>
+        <div class="ticks" aria-hidden="true"><span class="tick" style="inset-inline-start:2.473%">سبتمبر</span><span class="tick" style="inset-inline-start:10.714%">أكتوبر</span><span class="tick" style="inset-inline-start:19.231%">نوفمبر</span><span class="tick" style="inset-inline-start:27.473%">ديسمبر</span><span class="tick" style="inset-inline-start:35.989%">يناير</span><span class="tick" style="inset-inline-start:44.505%">فبراير</span><span class="tick" style="inset-inline-start:52.198%">مارس</span><span class="tick" style="inset-inline-start:60.714%">أبريل</span><span class="tick" style="inset-inline-start:68.956%">مايو</span><span class="tick" style="inset-inline-start:77.473%">يونيو</span><span class="tick" style="inset-inline-start:85.714%">يوليو</span><span class="tick" style="inset-inline-start:94.231%">أغسطس</span></div>
+      </div>
+    </div>
+
+    <div class="month" id="cal-month">
+      <div class="month-head">
+        <button class="mbtn" type="button" id="cal-prev" aria-label="الشهر السابق"><svg class="ic-sm flip" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m11 6-6 6 6 6"/></svg></button>
+        <div class="month-title"><b id="cal-mname"></b><small id="cal-hname"></small></div>
+        <button class="mbtn" type="button" id="cal-next-m" aria-label="الشهر التالي"><svg class="ic-sm" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m11 6-6 6 6 6"/></svg></button>
+      </div>
+      <div class="wd" aria-hidden="true"><span>الأحد</span><span>الإثنين</span><span>الثلاثاء</span><span>الأربعاء</span><span>الخميس</span><span class="we">الجمعة</span><span class="we">السبت</span></div>
+      <div class="days" id="cal-days" role="grid" aria-label="أيام الشهر"></div>
+      <p class="month-note" id="cal-mnote"></p>
+    </div>
+
+    <div class="hol-grid">
+        <article class="hol" style="--hc:var(--h-national)" data-from="2026-09-23" data-to="2026-09-26">
+          <div class="hol-top"><span class="hol-type"><i></i>مناسبة وطنية</span><span class="hol-state"></span></div>
+          <h3>إجازة اليوم الوطني</h3>
+          <p class="hol-when">الأربعاء 23 – السبت 26 سبتمبر 2026</p>
+          <p class="hol-hijri">12 – 15 ربيع الآخر 1448</p>
+          <div class="hol-foot"><b>4 أيام</b></div>
+        </article>
+        <article class="hol" style="--hc:var(--h-break)" data-from="2026-11-20" data-to="2026-11-28">
+          <div class="hol-top"><span class="hol-type"><i></i>إجازة فصلية</span><span class="hol-state"></span></div>
+          <h3>إجازة الخريف</h3>
+          <p class="hol-when">الجمعة 20 – السبت 28 نوفمبر 2026</p>
+          <p class="hol-hijri">10 – 18 جمادى الآخرة 1448</p>
+          <div class="hol-foot"><b>9 أيام</b><span class="tag trip">مناسبة للرحلات</span></div>
+        </article>
+        <article class="hol" style="--hc:var(--h-break)" data-from="2027-01-08" data-to="2027-01-16">
+          <div class="hol-top"><span class="hol-type"><i></i>إجازة فصلية</span><span class="hol-state"></span></div>
+          <h3>إجازة منتصف العام</h3>
+          <p class="hol-when">الجمعة 8 – السبت 16 يناير 2027</p>
+          <p class="hol-hijri">30 رجب – 8 شعبان 1448</p>
+          <div class="hol-foot"><b>9 أيام</b><span class="tag trip">مناسبة للرحلات</span></div>
+        </article>
+        <article class="hol" style="--hc:var(--h-national)" data-from="2027-02-19" data-to="2027-02-22">
+          <div class="hol-top"><span class="hol-type"><i></i>مناسبة وطنية</span><span class="hol-state"></span></div>
+          <h3>إجازة يوم التأسيس</h3>
+          <p class="hol-when">الجمعة 19 – الإثنين 22 فبراير 2027</p>
+          <p class="hol-hijri">12 – 15 رمضان 1448</p>
+          <div class="hol-foot"><b>4 أيام</b></div>
+        </article>
+        <article class="hol" style="--hc:var(--h-eid)" data-from="2027-02-26" data-to="2027-03-13">
+          <div class="hol-top"><span class="hol-type"><i></i>عيد</span><span class="hol-state"></span></div>
+          <h3>إجازة عيد الفطر</h3>
+          <p class="hol-when">الجمعة 26 فبراير – السبت 13 مارس 2027</p>
+          <p class="hol-hijri">19 رمضان – 5 شوال 1448</p>
+          <div class="hol-foot"><b>16 يومًا</b><span class="tag trip">مناسبة للرحلات</span><span class="tag approx">تقديرية: حسب رؤية الهلال</span></div>
+        </article>
+        <article class="hol" style="--hc:var(--h-eid)" data-from="2027-05-07" data-to="2027-05-22">
+          <div class="hol-top"><span class="hol-type"><i></i>عيد</span><span class="hol-state"></span></div>
+          <h3>إجازة عيد الأضحى</h3>
+          <p class="hol-when">الجمعة 7 – السبت 22 مايو 2027</p>
+          <p class="hol-hijri">1 – 16 ذو الحجة 1448</p>
+          <div class="hol-foot"><b>16 يومًا</b><span class="tag trip">مناسبة للرحلات</span><span class="tag approx">تقديرية: حسب رؤية الهلال</span></div>
+        </article>
+        <article class="hol" style="--hc:var(--h-summer)" data-from="2027-06-25" data-to="2027-08-21">
+          <div class="hol-top"><span class="hol-type"><i></i>نهاية العام</span><span class="hol-state"></span></div>
+          <h3>إجازة نهاية العام</h3>
+          <p class="hol-when">تبدأ الجمعة 25 يونيو 2027</p>
+          <p class="hol-hijri">من 20 محرم 1449</p>
+          <div class="hol-foot"><b>حتى بداية العام التالي</b><span class="tag trip">مناسبة للرحلات</span></div>
+        </article>
+    </div>
+
+    <p class="cal-src">المصدر: <a href="https://www.moe.gov.sa/ar/education/generaleducation/Pages/academicCalendar.aspx" target="_blank" rel="noopener">التقويم الدراسي لوزارة التعليم</a>.
+      موعدا العيدين تقديريّان حسب رؤية الهلال، فراجِعها قبل الحجز النهائي. مكة المكرمة والمدينة المنورة وجدة والطائف: بدأت الدراسة فيها 30 أغسطس 2026، وتبدأ إجازة عيد الأضحى 30 أبريل 2027، وينتهي العام 1 يوليو 2027.</p>
+  </section>
+  <script>
+  (() => {
+    const CAL = {"start": "2026-08-23", "end": "2027-06-24", "last": "2027-08-21", "holidays": [{"name": "إجازة اليوم الوطني", "type": "national", "from": "2026-09-23", "to": "2026-09-26", "hijri": "12 – 15 ربيع الآخر 1448"}, {"name": "إجازة الخريف", "type": "break", "from": "2026-11-20", "to": "2026-11-28", "hijri": "10 – 18 جمادى الآخرة 1448"}, {"name": "إجازة منتصف العام", "type": "break", "from": "2027-01-08", "to": "2027-01-16", "hijri": "30 رجب – 8 شعبان 1448"}, {"name": "إجازة يوم التأسيس", "type": "national", "from": "2027-02-19", "to": "2027-02-22", "hijri": "12 – 15 رمضان 1448"}, {"name": "إجازة عيد الفطر", "type": "eid", "from": "2027-02-26", "to": "2027-03-13", "hijri": "19 رمضان – 5 شوال 1448", "approx": true}, {"name": "إجازة عيد الأضحى", "type": "eid", "from": "2027-05-07", "to": "2027-05-22", "hijri": "1 – 16 ذو الحجة 1448", "approx": true}, {"name": "إجازة نهاية العام", "type": "summer", "from": "2027-06-25", "to": "2027-08-21", "hijri": "من 20 محرم 1449", "open": true}], "events": [["2026-08-23", "بداية الدراسة"], ["2027-01-17", "بداية الفصل الثاني"], ["2027-06-24", "آخر يوم دراسة"]]};
+    const D = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+    const DAY = 864e5;
+    const key = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    const now = new Date(); const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const hol = CAL.holidays.map(h => ({ ...h, a: D(h.from), b: D(h.to) }));
+    const start = D(CAL.start), end = D(CAL.end), last = D(CAL.last);
+    const gm = new Intl.DateTimeFormat('ar-SA-u-ca-gregory-nu-latn', { day: 'numeric', month: 'long' });
+    const hd = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn', { day: 'numeric' });
+    const hm = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn', { month: 'long', year: 'numeric' });
+    const mn = new Intl.DateTimeFormat('ar-SA-u-ca-gregory-nu-latn', { month: 'long', year: 'numeric' });
+    // تمييز العدد بالعربية يتبع آخر رقمين: «106 أيام» و«115 يومًا»
+    const days = n => n === 1 ? 'يوم واحد' : n === 2 ? 'يومان' : (n % 100 >= 3 && n % 100 <= 10) ? n + ' أيام' : n + ' يومًا';
+    const inHol = d => hol.find(h => d >= h.a && d <= h.b);
+    const diff = (a, b) => Math.round((b - a) / DAY);
+
+    // ── حالة اليوم والإجازة القادمة ──
+    const st = document.getElementById('cal-state'), nx = document.getElementById('cal-next');
+    const cur = inHol(today);
+    const next = hol.find(h => h.a > today);
+    const nextTrip = hol.find(h => h.a > today && diff(h.a, h.b) + 1 >= 7);
+    if (cur) {
+      st.innerHTML = 'الطلاب في <b style="color:var(--h-' + cur.type + ')">' + cur.name + '</b>';
+      if (!cur.open) st.innerHTML += '<small>تنتهي ' + gm.format(cur.b) + ' · باقي ' + days(diff(today, cur.b) + 1) + '</small>';
+    } else if (today < start) {
+      st.innerHTML = 'قبل بداية العام<small>تبدأ الدراسة ' + gm.format(start) + '</small>';
+    } else if (today > last) {
+      st.innerHTML = 'انتهى هذا التقويم<small>يُحدَّث بتقويم العام التالي حين يُعلَن</small>';
+    } else {
+      st.innerHTML = 'أيام دراسة' + ([5, 6].includes(today.getDay()) ? '<small>واليوم عطلة نهاية الأسبوع</small>' : '<small>الطلاب في المدارس</small>');
+    }
+    const row = (h, lbl) => h ? '<div class="nx" style="--hc:var(--h-' + h.type + ')"><span>' + lbl + '</span><b>' + h.name + '</b>'
+      + '<em>' + (diff(today, h.a) === 1 ? 'غدًا' : 'بعد ' + days(diff(today, h.a))) + '</em><small>' + gm.format(h.a)
+      + (h.open ? '' : ' – ' + gm.format(h.b)) + '</small></div>' : '';
+    nx.innerHTML = row(next, 'الإجازة القادمة') + (nextTrip && nextTrip !== next ? row(nextTrip, 'أقرب إجازة طويلة للرحلات') : '');
+
+    // ── علامة اليوم على شريط العام ──
+    const tm = document.getElementById('cal-today');
+    const total = diff(start, last) + 1;
+    if (today >= start && today <= last) tm.style.insetInlineStart = (diff(start, today) / total * 100) + '%';
+    else tm.hidden = true;
+
+    // ── حالة كل بطاقة: انتهت · الآن · بعد كذا ──
+    document.querySelectorAll('.hol').forEach(c => {
+      const a = D(c.dataset.from), b = D(c.dataset.to), s = c.querySelector('.hol-state');
+      if (today > b) { c.classList.add('past'); s.textContent = 'انتهت'; }
+      else if (today >= a) { c.classList.add('now'); s.textContent = 'الآن'; }
+      else s.textContent = diff(today, a) === 1 ? 'غدًا' : 'بعد ' + days(diff(today, a));
+    });
+
+    // ── الشهر ──
+    const first = new Date(start.getFullYear(), start.getMonth(), 1), lastM = new Date(last.getFullYear(), last.getMonth(), 1);
+    let view = today < first ? first : today > last ? lastM : new Date(today.getFullYear(), today.getMonth(), 1);
+    const ev = Object.fromEntries(CAL.events);
+    const grid = document.getElementById('cal-days');
+    function draw() {
+      const y = view.getFullYear(), m = view.getMonth();
+      const n = new Date(y, m + 1, 0).getDate();
+      document.getElementById('cal-mname').textContent = mn.format(view);
+      const h1 = hm.format(new Date(y, m, 1)), h2 = hm.format(new Date(y, m, n));
+      document.getElementById('cal-hname').textContent = h1 === h2 ? h1 : h1.replace(/\s*\d+\s*هـ?/, '') + ' – ' + h2;
+      let html = '<span class="pad"></span>'.repeat(new Date(y, m, 1).getDay());
+      const inMonth = new Set();
+      for (let d = 1; d <= n; d++) {
+        const dt = new Date(y, m, d), h = inHol(dt), e = ev[key(dt)];
+        const cls = ['day'];
+        if (h) { cls.push('h'); inMonth.add(h.name);
+          if (+dt === +h.a || dt.getDay() === 0) cls.push('hs');
+          if (+dt === +h.b || dt.getDay() === 6) cls.push('he'); }
+        if ([5, 6].includes(dt.getDay())) cls.push('we');
+        if (+dt === +today) cls.push('today');
+        if (e) cls.push('ev');
+        const label = (h ? h.name : e || '');
+        html += '<span role="gridcell" class="' + cls.join(' ') + '"' + (h ? ' style="--hc:var(--h-' + h.type + ')"' : '')
+          + (label ? ' title="' + label + '"' : '') + '><b>' + d + '</b><small>' + hd.format(dt) + '</small>'
+          + (e ? '<i class="evd">' + e + '</i>' : '') + '</span>';
+      }
+      grid.innerHTML = html;
+      document.getElementById('cal-mnote').textContent = inMonth.size ? 'في هذا الشهر: ' + [...inMonth].join('، ') : 'لا إجازات في هذا الشهر: كل أيامه دراسية عدا نهاية الأسبوع.';
+      document.getElementById('cal-prev').disabled = +view <= +first;
+      document.getElementById('cal-next-m').disabled = +view >= +lastM;
+    }
+    document.getElementById('cal-prev').onclick = () => { view = new Date(view.getFullYear(), view.getMonth() - 1, 1); draw(); };
+    document.getElementById('cal-next-m').onclick = () => { view = new Date(view.getFullYear(), view.getMonth() + 1, 1); draw(); };
+    draw();
+  })();
+  </script>
 
   <section class="closing reveal" aria-label="خلاصة">
     <h2>تقنيةٌ تعمل خلف الستار<br>ليتفرّغ الفريق للطفل</h2>
