@@ -123,7 +123,10 @@ body::before{ /* يطلي شريط الحافّة العليا في الجوال
   animation:breathe 6s ease-in-out infinite}
 .core img{width:58%;height:auto}
 @keyframes breathe{50%{box-shadow:0 0 0 14px rgb(95 186 126 / .14),0 0 0 30px rgb(95 186 126 / .05),0 30px 90px -6px rgb(114 195 79 / .7)}}
-.ring{position:absolute;inset:0;animation:spin var(--t) linear infinite}
+/* المداران طبقتان بحجم المربّع كاملًا، والخارجي فوق الداخلي — فكان يلتقط المؤشّر
+   قبل أن يصل إلى كواكب الداخلي الثلاثة. الطبقة لا تستقبل شيئًا، والكوكب وحده يستقبل */
+.ring{position:absolute;inset:0;animation:spin var(--t) linear infinite;pointer-events:none}
+.node{pointer-events:auto}
 .ring.inner{--t:70s}
 .ring.outer{--t:110s;animation-direction:reverse}
 .ring-line{position:absolute;border-radius:50%;border:1px dashed rgb(255 255 255 / .22)}
