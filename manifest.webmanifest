@@ -1,0 +1,46 @@
+{
+ "name": "منصات الرياحين الرقمية",
+ "short_name": "منصات الرياحين",
+ "description": "بوابة واحدة لكل المنصات الرقمية لجمعية الرياحين لتنمية الطفل",
+ "lang": "ar",
+ "dir": "rtl",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#062F31",
+ "theme_color": "#062F31",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ],
+ "shortcuts": [
+  {
+   "name": "المنصات",
+   "url": "./#platforms"
+  },
+  {
+   "name": "إجازات المدارس",
+   "url": "./#calendar"
+  },
+  {
+   "name": "المواسم القادمة",
+   "url": "./#seasons"
+  }
+ ]
+}
