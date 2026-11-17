@@ -563,6 +563,21 @@ body::before{ /* يطلي شريط الحافّة العليا في الجوال
 .nums b{display:block;font-size:46px;background:linear-gradient(180deg,#fff,#BFE6CC);-webkit-background-clip:text;background-clip:text;color:transparent}
 .nums span{font-size:14px;color:#CFE3E1}
 
+/* عدّاد الأثر: يتصدّر الخاتمة حين يصل، وأرقام المنصات تصغر تحته */
+.impact{position:relative;margin-top:34px}
+.impact[hidden]{display:none}
+.impact-kicker{margin:0 auto 8px!important;font-size:14px;color:#BFE6CC!important;font-weight:700}
+.impact-nums{display:flex;justify-content:center;flex-wrap:wrap;gap:18px 44px}
+.impact-nums div{line-height:1.25;max-width:190px}
+.impact-nums b{display:block;font-size:52px;font-variant-numeric:tabular-nums;
+  background:linear-gradient(180deg,#fff,#BFE6CC);-webkit-background-clip:text;background-clip:text;color:transparent}
+.impact-nums span{font-size:14.5px;color:#E6F1F0}
+.impact-note{margin:14px auto 0!important;font-size:12.5px;color:#8FC4BE!important}
+.closing.has-impact .nums{margin-top:26px;padding-top:22px;border-top:1px solid rgb(255 255 255 / .14);gap:8px 36px}
+.closing.has-impact .nums b{font-size:28px}
+.closing.has-impact .nums span{font-size:13px}
+@media (max-width:640px){.impact-nums b{font-size:40px}.impact-nums{gap:16px 26px}}
+
 .empty{display:none;text-align:center;color:var(--muted);padding:56px 0}
 .empty.show{display:block}
 .hidden{display:none!important}
@@ -1453,6 +1468,11 @@ window.rhICS = (events, file) => {
   <section class="closing reveal" aria-label="خلاصة">
     <h2>تقنيةٌ تعمل خلف الستار<br>ليتفرّغ الفريق للطفل</h2>
     <p>كل منصة هنا تخدم حاجةً حقيقية في الجمعية، بهويتها ولغتها.</p>
+    <div class="impact" id="impact" hidden>
+      <p class="impact-kicker">أثرٌ يُعدّ من سجلّ العمل نفسه</p>
+      <div class="impact-nums" id="impact-nums"></div>
+      <p class="impact-note" id="impact-note"></p>
+    </div>
     <div class="nums">
       <div><b data-count="11">11</b><span>منصة</span></div>
       <div><b data-count="8">8</b><span>منشورة على الإنترنت</span></div>
@@ -1586,6 +1606,23 @@ window.rhICS = (events, file) => {
   roles.forEach(b => b.addEventListener('click', () => setRole(b.getAttribute('aria-pressed') === 'true' ? null : b.dataset.role)));
   if (!root0.classList.contains('donors')) { let r = null; try { r = localStorage.getItem('rh-role'); } catch (e) {} if (r) setRole(r, false); }
 
+  // ── عدّاد الأثر: من سجلات المنظومة مباشرة. يظهر ما فوق الصفر وحده،
+  //    ويبقى العدّاد مخفيًّا إن لم يصل الردّ — فلا يُرى رقمٌ لم يُقَس ──
+  fetch('https://pmoserver-production.up.railway.app/api/public/impact', { mode: 'cors' }).then(r => r.ok ? r.json() : Promise.reject()).then(data => {
+    const live = (data.fields || []).filter(f => Number(f.value) > 0);
+    if (!live.length) return;
+    const fmt = new Intl.NumberFormat('en-US');
+    $('#impact-nums').innerHTML = live.map(f => {
+      const n = Number(f.value), word = (n % 100 >= 3 && n % 100 <= 10) ? f.few : f.label;
+      return '<div><b data-count="' + n + '">' + fmt.format(n) + '</b><span>' + word + '</span></div>';
+    }).join('');
+    const at = new Date(data.asOf);
+    $('#impact-note').textContent = 'تُحسب آليًّا من منظومة PMO · آخر تحديث ' +
+      new Intl.DateTimeFormat('ar-SA-u-ca-gregory-nu-latn', { day: 'numeric', month: 'long', hour: 'numeric', minute: '2-digit' }).format(at);
+    $('#impact').hidden = false;
+    $('.closing').classList.add('has-impact');
+  }).catch(() => {});
+
   // ── أزرار «أضف لتقويمي» في المواسم والإجازات ──
   document.addEventListener('click', e => {
     const b = e.target.closest('button[data-ics-name]');
@@ -1640,14 +1677,14 @@ window.rhICS = (events, file) => {
   const count = el => {
     const end = +el.dataset.count; let t0;
     const step = t => { t0 ??= t; const k = Math.min((t - t0) / 1100, 1);
-      el.textContent = Math.max(1, Math.round(end * (1 - Math.pow(1 - k, 3)))); if (k < 1) requestAnimationFrame(step); };
+      el.textContent = Math.max(1, Math.round(end * (1 - Math.pow(1 - k, 3)))).toLocaleString('en-US'); if (k < 1) requestAnimationFrame(step); };
     requestAnimationFrame(step);
   };
   const closing = $('.closing');
   if ('IntersectionObserver' in window && closing && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     const io = new IntersectionObserver(es => es.forEach(e => {
       if (!e.isIntersecting) return;
-      e.target.querySelectorAll('[data-count]').forEach(count);
+      e.target.querySelectorAll('.nums [data-count], .impact:not([hidden]) [data-count]').forEach(count);
       io.unobserve(e.target);
     }), { threshold: .4 });
     io.observe(closing);
